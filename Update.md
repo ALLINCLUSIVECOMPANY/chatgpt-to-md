@@ -521,6 +521,7 @@ Explicit handling currently exists for:
 | `execution_output` | Collapsible output block |
 | `tether_quote` | Blockquote with source |
 | `sonic_webpage` | Blockquote containing webpage information |
+| `thoughts` | Collapsible thinking block |
 | `reasoning_recap` | Italic recap |
 | `system_error` | Error message |
 
@@ -539,27 +540,6 @@ Nested `audio_transcription` data encountered inside multimodal messages also re
 
 ---
 
-# Important note about `thoughts`
-
-The original converter explicitly handled:
-
-```text
-content_type: thoughts
-```
-
-and rendered it inside:
-
-```html
-<details><summary>Thinking...</summary>
-```
-
-The current version of this fork does **not yet include that explicit handler**.
-
-This should be restored if preservation of the original converter's `thoughts` behavior is desired.
-
-No claim is made that hidden model reasoning will necessarily exist in a ChatGPT export; this only concerns `thoughts` content that is actually present in exported message data.
-
----
 
 # Metadata improvements
 
@@ -771,5 +751,6 @@ Compared with the original version, this fork adds:
 - dynamically generated conversion dates;
 - implementation syntax compatible with Python 3.8+;
 - improved unknown-content fallbacks.
+- preserves the original thoughts renderer. 
 
 The existing DAG-based conversation reconstruction, canonical-path behavior, alternative branch preservation, Markdown-per-conversation layout, chronological organization, model metadata collection, and role-based rendering remain based on the original converter.
