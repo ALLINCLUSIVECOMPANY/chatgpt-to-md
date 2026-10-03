@@ -859,6 +859,16 @@ def render_conversation(convo: dict, assets_map: Dict[str, str]) -> Optional[str
     if not isinstance(mapping, dict) or not mapping:
         return None
 
+    # Newer exports may contain parent pointers without children arrays; rebuild them.
+    for nid, node in mapping.items():
+        if isinstance(node, dict):
+            node.setdefault("children", [])
+    for nid, node in mapping.items():
+        if isinstance(node, dict):
+            parent = node.get("parent")
+            if parent in mapping and nid not in mapping[parent]["children"]:
+                mapping[parent]["children"].append(nid)
+
     root = find_root(mapping)
     if not root:
         return None
@@ -1124,5 +1134,6 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
 
 
