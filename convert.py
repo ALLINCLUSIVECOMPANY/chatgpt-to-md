@@ -1,5 +1,4 @@
-from pathlib import Path
-
+#!/usr/bin/env python3
 """Convert an OpenAI ChatGPT data export into Markdown files.
 
 Supports both older and current export layouts, including:
@@ -35,7 +34,7 @@ from urllib.parse import quote
 def slugify(text: str, max_len: int = 60) -> str:
     """Convert text to a filename-safe ASCII slug."""
     text = (text or "").lower()
-    text = re.sub(r"['’`]", "", text)
+    text = re.sub(r"['â€™`]", "", text)
     text = re.sub(r"[^a-z0-9]+", "-", text)
     text = text.strip("-")
     if len(text) > max_len:
@@ -686,9 +685,9 @@ def render_tether_quote(content: dict) -> str:
     quoted = "\n".join("> " + line for line in text.split("\n"))
     source = ""
     if url and not url.startswith("file-"):
-        source = "\n> — [{}]({})".format(domain or url, url)
+        source = "\n> â€” [{}]({})".format(domain or url, url)
     elif domain:
-        source = "\n> — {}".format(domain)
+        source = "\n> â€” {}".format(domain)
     return quoted + source
 
 
@@ -711,6 +710,28 @@ def render_sonic_webpage(content: dict) -> str:
             parts.append("\n".join("> " + line for line in cleaned.split("\n")))
 
     return "\n".join(parts)
+
+
+def render_thoughts(content: dict) -> str:
+    thoughts = content.get("thoughts", [])
+    if not thoughts:
+        return ""
+    texts = []
+    for t in thoughts:
+        if isinstance(t, dict):
+            c = str(t.get("content") or "").strip()
+            if c:
+                texts.append(c)
+    if not texts:
+        return ""
+    body = "
+
+".join(texts)
+    return "<details><summary>Thinking...</summary>
+
+{}
+
+</details>".format(body)
 
 
 def render_reasoning_recap(content: dict) -> str:
@@ -746,6 +767,8 @@ def render_message_content(content: dict, assets_map: Dict[str, str]) -> str:
         return render_tether_quote(content)
     if ct == "sonic_webpage":
         return render_sonic_webpage(content)
+    if ct == "thoughts":
+        return render_thoughts(content)
     if ct == "reasoning_recap":
         return render_reasoning_recap(content)
     if ct == "system_error":
@@ -1107,3 +1130,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
