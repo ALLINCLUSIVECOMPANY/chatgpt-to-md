@@ -724,14 +724,8 @@ def render_thoughts(content: dict) -> str:
                 texts.append(c)
     if not texts:
         return ""
-    body = "
-
-".join(texts)
-    return "<details><summary>Thinking...</summary>
-
-{}
-
-</details>".format(body)
+    body = "\n\n".join(texts)
+    return "<details><summary>Thinking...</summary>\n\n{}\n\n</details>".format(body)
 
 
 def render_reasoning_recap(content: dict) -> str:
@@ -1130,4 +1124,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
 
