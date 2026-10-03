@@ -19,6 +19,7 @@ import mimetypes
 import re
 import shutil
 import sys
+sys.setrecursionlimit(20000)
 import tempfile
 import zipfile
 from datetime import datetime, timezone
@@ -1134,6 +1135,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
 
 
 
